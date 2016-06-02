@@ -127,14 +127,14 @@ int main(int argc, char* argv[])
         return 1;
     }
     
-    int keyboardFd = open("/dev/input/event0", O_RDONLY | O_NOCTTY);
+    int keyboardFd = open("/dev/input/event0", O_RDONLY);
     
     if (keyboardFd == -1)
     {
         printf("No keyboard installed\n");
     }
     
-    int mouseFd = open("/dev/input/event1", O_RDONLY | O_NOCTTY);
+    int mouseFd = open("/dev/input/event1", O_RDONLY);
     
     if (mouseFd == -1)
     {
