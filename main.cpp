@@ -84,9 +84,6 @@ int main(int argc, char* argv[])
         printf("Failed to get display size\n");
         return 1;
     }
-    
-    // TODO: delete
-    screenHeight -= 100;
 
     VC_RECT_T dstRect;
     dstRect.x = 0;
@@ -137,7 +134,7 @@ int main(int argc, char* argv[])
         printf("No keyboard installed\n");
     }
     
-    int mouseFd = open("/dev/input/mouse0", O_RDONLY | O_NOCTTY);
+    int mouseFd = open("/dev/input/event1", O_RDONLY | O_NOCTTY);
     
     if (mouseFd == -1)
     {
@@ -207,19 +204,31 @@ int main(int argc, char* argv[])
                 
                 printf("Got input from mouse, read %d bytes\n", bytesRead);
                 
-                for (int i = 0; i < bytesRead - 2; i += 3)
+                struct input_event event;
+                
+                for (int i = 0; i < bytesRead - (int)sizeof(event) + 1; i += sizeof(event))
                 {
-                    if (TEMP[i] & 0x01) printf("Left down\n");
-                    if (TEMP[i] & 0x02) printf("Right down\n");
-                    if (TEMP[i] & 0x04) printf("Middle down\n");
+                    memcpy(&event, TEMP +  i, sizeof(event));
                     
-                    uint8_t x = TEMP[i + 1];
-                    uint8_t y = TEMP[i + 2];
+                    printf("Timestamp: %d.%d, type: %d", (uint32_t)event.time.tv_sec, (uint32_t)event.time.tv_usec, event.type);
                     
-                    int offsetX = x > SCHAR_MAX ? (x - UCHAR_MAX - 1) : x;
-                    int offsetY = y > SCHAR_MAX ? (y - UCHAR_MAX - 1) : y;
+                    switch (event.type)
+                    {
+                    case EV_SYN:
+                        printf(", EV_SYN");
+                        break;
+                    case EV_KEY:
+                        printf(", EV_KEY");
+                        break;
+                    case EV_MSC:
+                        printf(", EV_MSC");
+                        break;
+                    case EV_REL:
+                        printf(", EV_REL");
+                        break;
+                    }
                     
-                    printf("Offset x: %d, y: %d\n", offsetX, offsetY);
+                    printf(", value: %d, key: %d\n", event.value, event.code);
                 }
             }
         }
