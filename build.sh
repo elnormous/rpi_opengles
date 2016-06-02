@@ -1,0 +1,1 @@
+g++ -Wall -I/opt/vc/include -I/opt/vc/include/interface/vcos/pthreads -I/opt/vc/include/interface/vmcs_host/linux -L/opt/vc/lib main.cpp -lGLESv2 -lEGL -lbcm_host -o egl

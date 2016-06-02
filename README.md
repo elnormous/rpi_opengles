@@ -1,2 +1,2 @@
-# rpi_opengles
-OpenGL on RaspberryPi
+# OpenGL ES on Raspberry Pi
+OpenGL ES running on Raspberry Pi
