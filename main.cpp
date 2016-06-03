@@ -127,25 +127,58 @@ int main(int argc, char* argv[])
         return 1;
     }
     
+    // input
+    char TEMP[256];
+    
     int keyboardFd = open("/dev/input/event0", O_RDONLY);
     
     if (keyboardFd == -1)
     {
         printf("No keyboard installed\n");
+        return 1;
     }
+    
+    if (ioctl(keyboardFd, EVIOCGRAB, (void *)1) < 0)
+    {
+	    printf("Failed to get grab device\n");
+	    return 1;
+    }
+    
+    memset(TEMP, 0, sizeof(TEMP));
+	if (ioctl(keyboardFd, EVIOCGNAME(sizeof(TEMP) - 1), TEMP) < 0)
+	{
+	    printf("Failed to get device name\n");
+		return 1;
+	}
+	
+	printf("Device name: %s\n", TEMP);
     
     int mouseFd = open("/dev/input/event1", O_RDONLY);
     
     if (mouseFd == -1)
     {
         printf("No mouse installed\n");
+        return 1;
     }
+    
+    if (ioctl(mouseFd, EVIOCGRAB, (void *)1) < 0)
+    {
+	    printf("Failed to get grab device\n");
+	    return 1;
+    }
+    
+    memset(TEMP, 0, sizeof(TEMP));
+	if (ioctl(mouseFd, EVIOCGNAME(sizeof(TEMP) - 1), TEMP) < 0)
+	{
+	    printf("Failed to get device name\n");
+		return 1;
+	}
+	printf("Device name: %s\n", TEMP);
     
     fd_set rfds;
     struct timeval tv;
     int maxFd = keyboardFd;
     if (mouseFd > maxFd) maxFd = mouseFd;
-    char TEMP[256];
     
     for(;;)
     {
@@ -240,8 +273,25 @@ int main(int argc, char* argv[])
         eglSwapBuffers(display, surface);
     }
     
-    close(mouseFd);
-    close(keyboardFd);
+    if (ioctl(mouseFd, EVIOCGRAB, (void *)0) < 0)
+    {
+	    printf("Failed to get grab device\n");
+    }
+    
+    if (close(mouseFd) == -1)
+    {
+	    printf("Failed to close mouse file descriptor\n");
+    }
+    
+    if (ioctl(keyboardFd, EVIOCGRAB, (void *)0) < 0)
+    {
+	    printf("Failed to get grab device\n");
+    }
+
+    if (close(keyboardFd) == -1)
+    {
+	    printf("Failed to close keyboard file descriptor\n");
+    }
     
     if (!eglDestroySurface(display, surface))
     {
