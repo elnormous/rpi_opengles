@@ -140,18 +140,18 @@ int main(int argc, char* argv[])
     
     if (ioctl(keyboardFd, EVIOCGRAB, (void *)1) < 0)
     {
-	    printf("Failed to get grab device\n");
-	    return 1;
+        printf("Failed to get grab device\n");
+        return 1;
     }
     
     memset(TEMP, 0, sizeof(TEMP));
-	if (ioctl(keyboardFd, EVIOCGNAME(sizeof(TEMP) - 1), TEMP) < 0)
-	{
-	    printf("Failed to get device name\n");
-		return 1;
-	}
-	
-	printf("Device name: %s\n", TEMP);
+    if (ioctl(keyboardFd, EVIOCGNAME(sizeof(TEMP) - 1), TEMP) < 0)
+    {
+        printf("Failed to get device name\n");
+        return 1;
+    }
+    
+    printf("Device name: %s\n", TEMP);
     
     int mouseFd = open("/dev/input/event1", O_RDONLY);
     
@@ -163,17 +163,17 @@ int main(int argc, char* argv[])
     
     if (ioctl(mouseFd, EVIOCGRAB, (void *)1) < 0)
     {
-	    printf("Failed to get grab device\n");
-	    return 1;
+        printf("Failed to get grab device\n");
+        return 1;
     }
     
     memset(TEMP, 0, sizeof(TEMP));
-	if (ioctl(mouseFd, EVIOCGNAME(sizeof(TEMP) - 1), TEMP) < 0)
-	{
-	    printf("Failed to get device name\n");
-		return 1;
-	}
-	printf("Device name: %s\n", TEMP);
+    if (ioctl(mouseFd, EVIOCGNAME(sizeof(TEMP) - 1), TEMP) < 0)
+    {
+        printf("Failed to get device name\n");
+        return 1;
+    }
+    printf("Device name: %s\n", TEMP);
     
     fd_set rfds;
     struct timeval tv;
@@ -275,22 +275,22 @@ int main(int argc, char* argv[])
     
     if (ioctl(mouseFd, EVIOCGRAB, (void *)0) < 0)
     {
-	    printf("Failed to get grab device\n");
+        printf("Failed to get grab device\n");
     }
     
     if (close(mouseFd) == -1)
     {
-	    printf("Failed to close mouse file descriptor\n");
+        printf("Failed to close mouse file descriptor\n");
     }
     
     if (ioctl(keyboardFd, EVIOCGRAB, (void *)0) < 0)
     {
-	    printf("Failed to get grab device\n");
+        printf("Failed to get grab device\n");
     }
 
     if (close(keyboardFd) == -1)
     {
-	    printf("Failed to close keyboard file descriptor\n");
+        printf("Failed to close keyboard file descriptor\n");
     }
     
     if (!eglDestroySurface(display, surface))
